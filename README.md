@@ -41,7 +41,7 @@ The project supports Node.js 24 and does not require native C++ addons.
 ### 1. Clone the Repository
 
 ```bash
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/charu227/KhabarAI.git
 cd khabar-ai-backend
 ```
 
