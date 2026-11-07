@@ -1,69 +1,197 @@
-# Khabar AI — local-first complete evaluation build
+# Khabar AI – AI-Powered Brand Governance Platform
 
-This build keeps the existing Khabar AI interface and connects it to an Express backend with JSON-file persistence, authenticated accounts, demo roles, team administration, and local rules-based review. It supports Node.js 20+ (including Node.js 24) without native C++ addons.
+Khabar AI is a brand governance platform designed to help organizations maintain consistent, compliant, and on-brand communication. It helps teams manage brand guidelines, detect content violations, review marketing drafts, and streamline content approval workflows.
 
-## Requirements
+##  Key Features
+
+- **Brand Guidelines Management:** Define and manage brand identity, tone, colours, and communication guidelines.
+- **Content Compliance Review:** Detect banned words, unsupported claims, terminology violations, and formatting issues.
+- **Rules-Based Review Engine:** Perform local content checks without requiring an external AI API key.
+- **Approved Facts & Claims:** Maintain approved information and use it as a reference during content review.
+- **Banned Words & Preferred Terminology:** Configure restricted terms and preferred alternatives.
+- **Draft Management:** Create, edit, save, and manage content drafts.
+- **Review & Approval Workflow:** Enable Creators to submit drafts and Managers to approve or request changes.
+- **Before/After Suggestions:** Compare original content with suggested corrections.
+- **Notifications:** Track review updates and workflow activities.
+- **Version History:** Maintain a record of content changes.
+- **Analytics & Reports:** View brand governance and content compliance insights.
+- **Team Management:** Manage workspace members and their roles.
+- **Cross-Channel Brand Drift:** Compare content across channels and identify potential inconsistencies.
+
+##  Technology Stack
+
+- **Frontend:** HTML, CSS, JavaScript, React
+- **Backend:** Node.js, Express.js
+- **Storage:** JSON-file persistence
+- **Authentication:** JWT
+- **Password Security:** bcryptjs
+- **Security Middleware:** Helmet, CORS, Express Rate Limit
+- **Optional AI Integration:** Anthropic API
+
+##  Requirements
+
 - Windows 10/11, macOS, or Linux
 - Node.js 20 or newer
+- npm
 
-## Start on Windows
-1. Extract the ZIP.
-2. Open the `khabar-ai-backend` folder in VS Code.
-3. Open Terminal in that folder.
-4. Keep the included `.env` for local evaluation; `ANTHROPIC_API_KEY` is intentionally blank. Do not share `.env` or expose this local server publicly.
-5. Run:
-   ```powershell
-   npm install
-   npm run check
-   npm start
-   ```
-6. Open `http://localhost:3000` (do not open `public/index.html` directly).
+The project supports Node.js 24 and does not require native C++ addons.
 
-## Login options
-- Sign Up creates a new Creator account and an isolated workspace.
-- Existing users can log in with their email and password.
-- Demo Creator and Demo Manager quick-login buttons open two accounts in one shared demo workspace.
-- A Manager can create Creator or Manager accounts from **Team Management**. The manager sets a temporary password and shares it privately with the new member.
+##  Installation & Setup
 
-## No API key required
-The built-in local rules engine is the default when `ANTHROPIC_API_KEY` is blank. Content Review can check: configured banned terms, preferred terminology, tone examples, unsupported superlatives and statistics, absolute claims, accessibility patterns, ALL CAPS formatting, and off-palette hex colours. Claim verification, document extraction and cross-channel drift have deterministic/heuristic fallbacks. Before/After can apply safe local substitutions where the rule engine has a confident replacement; remaining edits are explicitly left for human review.
+### 1. Clone the Repository
 
-This is **rules-based automation, not a large language model**. It cannot reliably understand nuanced meaning, detect every unsupported claim, or inspect image semantics. Visual colour/format checks are local; logo/font semantic recognition requires an external vision model. Managers should review high-risk claims before approval.
+```bash
+git clone YOUR_REPOSITORY_URL
+cd khabar-ai-backend
+```
 
-## Connected features
-- Signup, login, logout, Demo Creator and Demo Manager
-- Role-aware Creator and Manager navigation
-- Workspace JSON persistence and restoration
-- Brand Guidelines, approved facts, terminology and version history
-- Draft management, local content review and explainable findings
-- Claim verification with approved-fact matching fallback
-- Before/After comparison and deterministic corrections
-- Creator submission and Manager review/approval workflow
-- Notifications, review queue, comments and revision history
-- Governance settings and review rules
-- Governance analytics, guideline intelligence, reports and audit timeline
-- Team Management: create accounts, change roles, remove accounts, view activity
-- Cross-Channel Brand Drift: compare channel content, detect numeric price/offer/spec mismatches, export report
+Alternatively, download and extract the project ZIP.
 
-## Data and backup
-Workspace data and account records are stored in `data/khabar-data.json`. Passwords are stored as bcrypt hashes. Stop the server before backing up this file. The bundled JWT secret is for local evaluation only; replace it before any deployment.
+### 2. Install Dependencies
 
-## API routes
-| Method | Route | Purpose |
+```bash
+npm install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env` file by copying `.env.example`.
+
+For Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Open `.env` and configure:
+
+```env
+PORT=3000
+JWT_SECRET=your-unique-random-secret-of-at-least-32-characters
+ANTHROPIC_API_KEY=
+ANTHROPIC_MODEL=claude-sonnet-4-6
+```
+
+**Note:** Anthropic API key is optional. Keep it blank to use the built-in local rules-based review engine. Generate your own secure JWT secret for local use.
+
+Never upload your actual `.env` file or expose secret keys publicly.
+
+### 4. Run the Project
+
+```bash
+npm run check
+npm start
+```
+
+Open the application in your browser:
+
+```text
+http://localhost:3000
+```
+
+Do not open `public/index.html` directly. The application should be accessed through the Express server.
+
+##  Login Options
+
+Khabar AI provides three ways to access the platform:
+
+- **Sign Up:** Create a new Creator account with an isolated workspace.
+- **Demo Creator:** Explore the platform from a content creator's perspective.
+- **Demo Manager:** Explore review, approval, and team management features.
+
+Demo Creator and Demo Manager use a shared demonstration workspace, allowing users to experience the content submission and approval workflow.
+
+Managers can also create team accounts and assign Creator or Manager roles through Team Management.
+
+##  Rules-Based Content Review – No API Key Required
+
+Khabar AI includes a local rules-based review engine that can operate without an external AI service.
+
+It can identify:
+
+- Configured banned words and phrases.
+- Preferred terminology violations.
+- Unsupported superlatives and absolute claims.
+- Potentially unsupported numerical claims and statistics.
+- Tone and formatting inconsistencies.
+- ALL CAPS formatting patterns.
+- Accessibility-related content patterns.
+- Hex colour values that do not match configured brand colours.
+
+The review engine also supports deterministic corrections where a confident replacement is available.
+
+**Important:** This is rules-based automation, not a large language model. It does not guarantee complete semantic understanding or factual verification. Nuanced claims, context-dependent language, and visual semantics may require human review or an optional external AI integration.
+
+## 🔄Main Workflow
+
+1. Creator logs in and creates a content draft.
+2. Creator submits the content for review.
+3. The local review engine checks the content against configured brand rules.
+4. Findings, explanations, and suggested corrections are displayed.
+5. Creator revises and submits the draft.
+6. Manager reviews the submission.
+7. Manager approves the draft or requests changes.
+8. The workflow status and related notifications are updated.
+
+## 🔌 Backend API
+
+| Method | Endpoint | Purpose |
 |---|---|---|
-| GET | `/api/health` | Backend status and AI-key presence |
-| POST | `/api/auth/signup` | Create isolated Creator workspace |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/demo` | Demo Creator/Manager access |
-| GET | `/api/auth/me` | Validate session |
+| GET | `/api/health` | Check backend status |
+| POST | `/api/auth/signup` | Create a Creator account |
+| POST | `/api/auth/login` | Authenticate a user |
+| POST | `/api/auth/demo` | Access Demo Creator or Manager |
+| GET | `/api/auth/me` | Validate the current session |
 | POST | `/api/auth/logout` | Record logout |
 | GET | `/api/team` | List workspace members |
-| POST | `/api/team` | Manager creates a member account |
-| PATCH | `/api/team/:id` | Manager changes a member role |
-| DELETE | `/api/team/:id` | Manager removes a member |
-| GET/PUT | `/api/state` | Read/save workspace state |
-| POST | `/api/ai` | Optional server-side Anthropic call (only when key exists) |
-| GET | `/api/audit` | Manager audit event list |
+| POST | `/api/team` | Create a team member |
+| PATCH | `/api/team/:id` | Update a member's role |
+| DELETE | `/api/team/:id` | Remove a team member |
+| GET | `/api/state` | Retrieve workspace state |
+| PUT | `/api/state` | Save workspace state |
+| POST | `/api/ai` | Optional server-side Anthropic API request |
+| GET | `/api/audit` | Retrieve audit events |
 
-## Important scope note
-This is a local-first hackathon/evaluation build, not a production enterprise deployment. Workspace state is stored as one shared JSON document per organisation; a production release should move to normalized database records and enforce permissions per record/action, add invitation tokens/password reset, backups, monitoring, CSRF protections and deployment hardening. The demo login endpoints must not be exposed publicly.
+##  Data Storage
+
+Khabar AI uses JSON-file persistence for local evaluation.
+
+Workspace data and account records are stored in:
+
+```text
+data/khabar-data.json
+```
+
+Passwords are stored as bcrypt hashes rather than plain text.
+
+Stop the server before manually backing up the data file. The `.env` file and workspace data should not be committed to a public repository.
+
+##  Project Scope
+
+**Project Status: Functional Prototype – Round 2**
+
+Khabar AI is developed as a local-first prototype to demonstrate brand governance, content compliance checking, and collaborative approval workflows.
+
+The current implementation focuses on demonstrating the core product experience and its key workflows rather than providing a fully production-ready enterprise service.
+
+##  Future Enhancements
+
+- Advanced semantic content analysis using AI models.
+- More comprehensive factual claim verification.
+- Visual logo and brand asset recognition.
+- Real-time multi-channel brand monitoring.
+- Enterprise database integration.
+- Advanced access control and audit capabilities.
+- Cloud deployment and scalability improvements.
+
+##  Security & Deployment Note
+
+This project is intended for local hackathon evaluation and prototyping. It is not a production enterprise deployment.
+
+Before public deployment, additional work is required, including stronger record-level authorization, secure invitation flows, password recovery, database migration, monitoring, backups, CSRF protection, and deployment hardening.
+
+Demo authentication endpoints should not be exposed publicly without additional safeguards.
+
+---
+
+**Khabar AI – Making Every Piece of Content Consistent with Your Brand.**
