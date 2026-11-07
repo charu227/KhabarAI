@@ -1,0 +1,8 @@
+node_modules/
+.env
+/data/*.sqlite
+/data/*.sqlite-shm
+/data/*.sqlite-wal
+/data/khabar-data.json
+/data/khabar-data.json.tmp
+npm-debug.log*

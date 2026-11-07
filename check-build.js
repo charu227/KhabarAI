@@ -1,0 +1,22 @@
+const fs = require('fs');
+const path = require('path');
+const vm = require('vm');
+const html = fs.readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
+if (!html.includes("const API='/api'")) throw new Error('Frontend API adapter missing');
+if (!html.includes("apiRequest('/ai'")) throw new Error('Frontend AI proxy integration missing');
+if (!html.includes("if(!(await hasSemanticAI()))")) throw new Error('No-key rules-only review path missing');
+if (!html.includes("Local rules engine used after an unexpected review error.")) throw new Error('Review recovery fallback missing');
+if (!html.includes("apiRequest('/auth/demo'")) throw new Error('Demo login integration missing');
+if (!html.includes('rawDoc?{...mk(),...rawDoc')) throw new Error('Defensive draft normalization missing');
+if (!html.includes("apiRequest('/team',{method:'POST'")) throw new Error('Backend-connected team creation missing');
+if (!html.includes("apiRequest('/team/'+u.id,{method:'PATCH'")) throw new Error('Backend-connected role management missing');
+if (!html.includes("apiRequest('/team/'+u.id,{method:'DELETE'")) throw new Error('Backend-connected member removal missing');
+if (!html.includes('["tm","👥","Team Management"]')) throw new Error('Manager Team Management navigation missing');
+if (!html.includes('["bd","🧭","Brand Drift"]')) throw new Error('Manager Brand Drift navigation missing');
+if (!html.includes('No API key configured. Local contradiction rules are active')) throw new Error('No-key conflict fallback messaging missing');
+if (html.includes('https://api.anthropic.com/v1/messages')) throw new Error('Direct browser-to-Anthropic call still present');
+const script = html.match(/<script type="text\/babel">([\s\S]*?)<\/script>/);
+if (!script) throw new Error('React application script not found');
+// `node --check server.js` checks backend syntax; this checks key frontend integration markers.
+console.log('Frontend integration markers: OK');
+console.log('Frontend script size:', script[1].length, 'characters');
